@@ -8,6 +8,9 @@ set autoindent
 set smartindent
 set encoding=utf8
 set history=5000
+set noswapfile "no swap file (vim creates them by default)
+set undodir=~/.nvim/undodir
+set undofile
 
 
 " Disable compatibility with vi which can cause unexpected issues.
@@ -111,6 +114,11 @@ tnoremap <Esc> <C-\><C-n>
 
 
 
+" Tab Navigation
+nnoremap <C-l> gt
+nnoremap <C-h> gT
+
+
 " Window Navigation with Ctrl-[hjkl]
 :tnoremap <A-h> <C-\><C-N><C-w>h
 :tnoremap <A-j> <C-\><C-N><C-w>j
@@ -132,6 +140,14 @@ noremap <C-H> <C-W>h
 noremap <C-L> <C-W>l
 
 
+" Pane Resizing
+nnoremap <silent> <C-Down>    :resize -2<CR>
+nnoremap <silent> <C-Up>  :resize +2<CR>
+nnoremap <silent> <C-Left>  :vertical resize -2<CR>
+nnoremap <silent> <C-Right> :vertical resize +2<CR>
+
+
+
 
 
 """ Plugin Managers - Vim Plug
@@ -140,6 +156,7 @@ call plug#begin()
 
 """ Plugins
 Plug 'preservim/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'navarasu/onedark.nvim'
 Plug 'itchyny/lightline.vim'
@@ -147,6 +164,8 @@ Plug 'sainnhe/artify.vim'
 Plug 'albertomontesg/lightline-asyncrun' " Integration of https://github.com/skywind3000/asyncrun.vim
 Plug 'rmolin88/pomodoro.vim'
 Plug 'ryanoasis/vim-devicons'
+Plug 'sheerun/vim-polyglot'
+Plug 'preservim/nerdcommenter'
 
 call plug#end()
 
@@ -159,23 +178,37 @@ call plug#end()
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * NERDTree
 
+" File explorer plugin
+map <C-o> :NERDTreeToggle<CR>
+" nerd commenter
+noremap <leader>c :NERDCommenterComment<CR>
+
+"let NERDTreeMapOpenInTab='<ENTER>'
+let NERDTreeMapActivateNode='v'  " Use 'v' to open files in a vertical split
+let NERDTreeCustomOpenArgs={'file':{'where': 't'}}
 let g:NERDTreeGitStatusWithFlags = 1
-"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-"let g:NERDTreeGitStatusNodeColorization = 1
-"let g:NERDTreeColorMapCustom = {
-    "\ "Staged"    : "#0ee375",
-    "\ "Modified"  : "#d9bf91",
-    "\ "Renamed"   : "#51C9FC",
-    "\ "Untracked" : "#FCE77C",
-    "\ "Unmerged"  : "#FC51E6",
-    "\ "Dirty"     : "#FFBD61",
-    "\ "Clean"     : "#87939A",
-    "\ "Ignored"   : "#808080"
-    "\ }
-
-
+let g:NERDTreeDirArrows = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:NERDTreeGitStatusNodeColorization = 1
+let g:NERDTreeColorMapCustom = {
+    \ "Staged"    : "#0ee375",
+    \ "Modified"  : "#d9bf91",
+    \ "Renamed"   : "#51C9FC",
+    \ "Untracked" : "#FCE77C",
+    \ "Unmerged"  : "#FC51E6",
+    \ "Dirty"     : "#FFBD61",
+    \ "Clean"     : "#87939A",
+    \ "Ignored"   : "#808080"}
+let g:NERDTreeGitStatusShowIgnored = 1
+let NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeIgnore = ['^node_modules$']
+let g:NERDTreeGitStatusUntrackedFilesMode = 'all'
+let g:NERDTreeGitStatusGitBinPath = '/usr/bin/git'
+let g:NERDTreeGitStatusShowClean = 1
+let NERDTreeStatusline='NERDTree'
 
+" Automaticaly close nvim if NERDTree is only thing left open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 
 
